@@ -6,6 +6,9 @@
 - создать новый проект typescript (автоматически будут созданы папки .idea  и 
 src, также файлы .gitignore, package.json, tsconfig.json)
 - создать README.md
+- создать первый коммит
+- создать репозиторий на github
+- 
 
 ## Для запуска необходимо
 
@@ -32,4 +35,16 @@ git add -A
 ### Закоммитить изменения
 ```text
 git commit -m 'message'
+```
+### Посмотреть информацию о коммитах
+```text
+git log
+```
+### Добавить удаленный репозиторий
+```text
+git remote add origin https://github.com/dimaNuts/api-framework-study.git
+```
+### Запушить в удалённый репозиторий в первый раз
+```text
+git push -u origin master
 ```
