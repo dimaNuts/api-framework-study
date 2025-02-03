@@ -8,6 +8,20 @@ src, также файлы .gitignore, package.json, tsconfig.json)
 - создать README.md
 - создать первый коммит
 - создать репозиторий на github
+- установить зависимости( @types/node, @types/chai, @types/mocha,
+  allure-commandline, allure-mocha, axios, chai, mocha, prettier, ts-node,
+  tslib)
+- добавить скрипты "scripts": {
+  "report": "allure generate ./allure-results -c && allure open",
+  "testALL": "mocha tests/**/*.ts",
+  "test": "mocha tests/demo_allure_test.ts"
+  }
+- настроить конфигурации тест-ранера "mocha": {
+  "timeout": 20000,
+  "retries": 0,
+  "reporter": "node_modules/allure-mocha",
+  "require": [ "node_modules/ts-node/register"] }
+- создать файл конфигурации для инструмента Prettier .prettierrc.js
 - 
 
 ## Для запуска необходимо
