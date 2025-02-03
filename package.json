@@ -7,8 +7,10 @@
     "build": "tsc"
   },
   "devDependencies": {
+    "axios": "^1.7.9",
     "chai": "^5.1.2",
     "mocha": "^11.1.0",
+    "prettier": "^3.4.2",
     "typescript": "^5.5.3"
   },
   "private": true
