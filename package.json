@@ -1,10 +1,20 @@
 {
   "name": "api-framework-study",
   "version": "1.0.0",
-  "description": "",
+  "description": "create study project auto test API-framework on base qa-fintech",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc"
+    "report": "allure generate ./allure-results -c && allure open",
+    "testALL": "mocha tests/**/*.ts",
+    "test": "mocha tests/demo_allure_test.ts"
+  },
+  "mocha": {
+    "timeout": 20000,
+    "retries": 0,
+    "reporter": "node_modules/allure-mocha",
+    "require": [
+      "node_modules/ts-node/register"
+    ]
   },
   "devDependencies": {
     "@types/chai": "^5.0.1",
