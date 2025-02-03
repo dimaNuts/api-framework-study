@@ -7,6 +7,8 @@
     "build": "tsc"
   },
   "devDependencies": {
+    "allure-commandline": "^2.32.0",
+    "allure-mocha": "^3.1.0",
     "axios": "^1.7.9",
     "chai": "^5.1.2",
     "mocha": "^11.1.0",
