@@ -22,6 +22,7 @@ src, также файлы .gitignore, package.json, tsconfig.json)
   "reporter": "node_modules/allure-mocha",
   "require": [ "node_modules/ts-node/register"] }
 - создать файл конфигурации для инструмента Prettier .prettierrc.js
+- создать директорию @types с базовыми типами, для дальнейшего использования
 - 
 
 ## Для запуска необходимо
