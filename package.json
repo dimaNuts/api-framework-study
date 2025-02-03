@@ -6,8 +6,9 @@
   "scripts": {
     "build": "tsc"
   },
-  "dependencies": {},
   "devDependencies": {
+    "chai": "^5.1.2",
+    "mocha": "^11.1.0",
     "typescript": "^5.5.3"
   },
   "private": true
