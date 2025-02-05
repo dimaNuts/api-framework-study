@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
-    "moduleResolution": "node16",
-    "esModuleInterop": true,
+    "moduleResolution": "node",
     "target": "es2020",
     "module": "commonjs",
     "types": ["node", "mocha"],

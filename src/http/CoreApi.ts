@@ -1,7 +1,7 @@
 import Client from './Client';
-import { URLSearchParams } from "node:url";
-import axios, {AxiosInstance, AxiosResponse} from "axios";
-import { CatMinInfo, Cat, CatsLIst, FailAddCat } from "../../@types/common";
+import { URLSearchParams } from 'url';
+import axios, {AxiosInstance, AxiosResponse} from 'axios';
+import { CatMinInfo, Cat, CatsLIst, FailAddCat } from '../../@types/common';
 
 
 export default class CoreApi extends Client {
