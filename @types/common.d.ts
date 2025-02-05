@@ -30,6 +30,7 @@ export type Cat  = {
     gender: 'male' | 'female' | 'unisex';
     likes: number;
     dislikes: number;
+    // ? означает, что поле не обязательное
     message?: string;
 };
 
