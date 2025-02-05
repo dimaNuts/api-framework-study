@@ -10,5 +10,12 @@ export default class Client {
         timeout: 10000,
     };
 
+    /*
+    * Метод получения экземпляра Axios
+     */
+    protected static getInstance(config: AxiosRequestConfig = {}) {
+        return axios.create(Object.assign(Client.config, config))
+    };
+
 
 };
