@@ -23,6 +23,7 @@ src, также файлы .gitignore, package.json, tsconfig.json)
   "require": [ "node_modules/ts-node/register"] }
 - создать файл конфигурации для инструмента Prettier .prettierrc.js
 - создать директорию @types с базовыми типами, для дальнейшего использования
+- создать директорию http, которая будет содержать клиент и методы для API
 - 
 
 ## Для запуска необходимо
@@ -61,5 +62,24 @@ git remote add origin https://github.com/dimaNuts/api-framework-study.git
 ```
 ### Запушить в удалённый репозиторий в первый раз
 ```text
+git push -u origin master
+```
+### ВАЖНО
+Продолжить работу над проектом в своем репозитории,
+если скачан с гитхаба.
+Это делается командой git remote add,
+но делать её можно только на существующем репозитории,
+так что вам понадобится ещё и git init.
+Потом вам понадобится получить из репозитория
+коммиты командой git fetch и
+сделать git reset чтобы вносить свои изменения не с нуля,
+а начиная с головы репозитория.
+```text
+git init
+git remote add origin url_репозитория
+git fetch origin
+git reset --mixed origin/master
+git add измененные файлы
+git commit -m "комментарий к коммиту"
 git push -u origin master
 ```
