@@ -3,9 +3,9 @@ import CoreApi from '../src/http/CoreApi';
 import * as allure from "allure-js-commons";
 import {Severity} from "allure-js-commons";
 
-describe('Проверка кота', async () => {
+describe('Проверка методов получения данных api', async () => {
     // Id идентификатор теста @allure.id:⟨VALUE⟩
-    it('Проверка имени кота по Id @allure.id: 123', async () => {
+    it('Проверка имени кота по Id @allure.id: 001', async () => {
         /*
         * Metadata метаданные { @link https://allurereport.org/docs/mocha-reference/#metadata }
          */
@@ -27,13 +27,14 @@ describe('Проверка кота', async () => {
         );
         await allure.link("https://meowle.fintech-qa.ru", "Meowle");
 
-        await allure.step("Load data from remote server", async ()=> {
+        await allure.step("Load data from remote server", async () => {
             const name = 'Бамбино';
             // Parameter
             await allure.parameter("name", name);
             const id = 130185;
             await allure.parameter("id", id.toString());
-            await allure.parameter("time", new Date().toString(), { excluded: true });
+            // Date дата запуска
+            await allure.parameter("time", new Date().toString(), {excluded: true});
 
             const response = await CoreApi.getCatById(id);
 
@@ -49,5 +50,55 @@ describe('Проверка кота', async () => {
             await allure.logStep(`выполнена проверка на эквивалент имён: из параметров и имени, полученного из запроса`)
         });
 
-    })
+    });
+
+    it('Проверка списка котов на количество в группе @alure.id: 002', async () => {
+        await allure.description("Это тест проверяет,что группа состоит из заданного количества количество котов");
+        await allure.owner("Кот Матроскин");
+        await allure.tag("getAllByLetter");
+        await allure.severity(Severity.NORMAL);
+        await allure.label("feature", "");
+        await allure.link(
+            'https://meowle.fintech-qa.ru/api/core/api-docs-ui/#/%D0%9F%D0%BE%D0%B8%D1%81%D0%BA/get_cats_allByLetter',
+            "Swagger UI");
+        await allure.link('http://meowle.fintech-qa.ru', 'Meowle');
+
+        await allure.step("Load data from remote server", async () => {
+            const limit = 5;
+            const order: string = '';
+            const gender: string = '';
+            await allure.parameter('limit', limit.toString());
+            await allure.parameter("order", order);
+            await allure.parameter("gender", gender);
+            await allure.parameter("time", new Date().toString(), {excluded: true});
+
+            console.info('тест 1 🚀:', 'выполняется запрос GET /список котов по группам');
+            const response = await CoreApi.getAllByLetter(limit, order, gender);
+            await allure.logStep(`выполнен запрос GET / Get-Метод получения списка котов сгруппированный по группам `);
+            await allure.logStep('получен список котов из запроса');
+
+            const data = JSON.stringify(response.data, null, 2);
+            console.info('тест 1 🚀:',
+                'получен ответ на запрос GET / список котов сгруппированных в алфавитном порядке', data);
+
+            await allure.attachment(
+                'CatsList',
+                data,
+                'application/json'
+            );
+
+            await allure.step(
+                'выполнена проверка количества котов в группе из запроса с ожидаемым',
+                () => {
+                    allure.logStep(`Фактическое количество котов в группе из ответа`);
+                    allure.attachment('actual limit', response.data.groups[0]["count_in_group"].toString(), 'text/plain');
+                    allure.logStep(`По заданным параметрам запроса количество котов в группе ожидалось limit=${limit}`);
+                    assert.equal(response.data.groups[0]["count_in_group"], 5, 'Количество котов в группе не соответствуют');
+                }
+            );
+
+
+        });
+
+    });
 })

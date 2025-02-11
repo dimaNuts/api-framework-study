@@ -25,4 +25,43 @@ export default class CoreApi extends Client {
         }
         return response;
     }
+
+    /**
+     * Get-Метод получения списка котов, сгруппированный по группам с указанием количества котов в группе
+     * [allByLetter] {@link https://meowle.fintech-qa.ru/api/core/api-docs-ui/#/%D0%9F%D0%BE%D0%B8%D1%81%D0%BA/get_cats_allByLetter }
+     * @param limit=5 - количество котов в группе
+     * @param order - сортировка, принимает значения desc | asc
+     * @param gender - пол, принимает значения male | female | unisex
+     */
+    static async getAllByLetter(limit: number=0, order= '', gender= ''): Promise<AxiosResponse<{
+        groups: { title:string; cats: Cat[] }[] }>> {
+        let response: AxiosResponse;
+
+        try {
+            let params:any;
+            // url, в зависимости от заданных параметров
+            if( isFinite(limit) && order.trim() && gender.trim() ) {
+                params = new URLSearchParams({limit: limit.toString(), order, gender});
+            } else if ( isFinite(limit) && order.trim() ) {
+                params = new URLSearchParams({limit: limit.toString(), order});
+            } else if( isFinite(limit) && gender.trim() ) {
+                params = new URLSearchParams({limit: limit.toString(), gender});
+            } else {
+                params = new URLSearchParams({limit: limit.toString()});
+            }
+
+            response = await this.coreApiHttpClient.get(`${this.api}/allByLetter?${(params)}`);
+        } catch (error) {
+            // см.докум @link https://axios.rest/pages/advanced/api-reference.html
+            if (axios.isAxiosError(error)) {
+                response = error.response;
+            } else {
+                console.error(error);
+            }
+        }
+        return response;
+
+    }
+
+
 };
