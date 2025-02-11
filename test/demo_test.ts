@@ -27,21 +27,27 @@ describe('Проверка кота', async () => {
         );
         await allure.link("https://meowle.fintech-qa.ru", "Meowle");
 
-        const name = 'Бамбино';
-        // Parameter
-        await allure.parameter("time", new Date().toString(), { excluded: true });
-        await allure.parameter("name", name);
-        const id = 130185;
-        await allure.parameter("id", id.toString());
+        await allure.step("Load data from remote server", async ()=> {
+            const name = 'Бамбино';
+            // Parameter
+            await allure.parameter("name", name);
+            const id = 130185;
+            await allure.parameter("id", id.toString());
+            await allure.parameter("time", new Date().toString(), { excluded: true });
 
-        const response = await CoreApi.getCatById(id);
-        await allure.logStep(`выполнен запрос GET /get-by-id c параметром ${id}`);
-        await allure.attachment(
-            'cat',
-            JSON.stringify(response.data.cat, null, 2),
-            'application/json'
-        );
+            const response = await CoreApi.getCatById(id);
 
-        assert.equal(response.data.cat.name, name, 'Имена не соответствуют');
+            await allure.logStep(`выполнен запрос GET /get-by-id c параметром id = ${id}`);
+            await allure.logStep(`получены данные о коте из ответа по запросу`);
+            await allure.attachment(
+                'cat',
+                JSON.stringify(response.data.cat, null, 2),
+                'application/json'
+            );
+
+            assert.equal(response.data.cat.name, name, 'Имена не соответствуют');
+            await allure.logStep(`выполнена проверка на эквивалент имён: из параметров и имени, полученного из запроса`)
+        });
+
     })
 })
