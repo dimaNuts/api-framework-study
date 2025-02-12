@@ -33,7 +33,7 @@ export default class CoreApi extends Client {
      * @param order - сортировка, принимает значения desc | asc
      * @param gender - пол, принимает значения male | female | unisex
      */
-    static async getAllByLetter(limit: number=0, order= '', gender= ''): Promise<AxiosResponse<{
+    static async getAllByLetter(limit: number = 0, order: string = '', gender: string = ''): Promise<AxiosResponse<{
         groups: { title:string; cats: Cat[] }[] }>> {
         let response: AxiosResponse;
 
@@ -61,6 +61,27 @@ export default class CoreApi extends Client {
         }
         return response;
 
+    }
+
+    /**
+     * Get-Метод поиска кота по части начала имени [search-pattern]{@link https://meowle.fintech-qa.ru/api/core/api-docs-ui/#/%D0%9F%D0%BE%D0%B8%D1%81%D0%BA/get_cats_search_pattern}
+     * @param name - имя
+     * @param limit=10 - число записей
+     */
+    static async searchCatByPartName(name: string, limit: number = 10): Promise<AxiosResponse<CatsLIst>> {
+        let response: AxiosResponse;
+        try {
+            const params = new URLSearchParams({ name, limit: limit.toString() });
+            response = await this.coreApiHttpClient(`${this.api}/search-pattern?${params}`);
+        } catch(error) {
+            if (axios.isAxiosError(error)) {
+                console.error(error);
+            } else {
+                console.error(error);
+            }
+
+        }
+        return response;
     }
 
 
