@@ -18,7 +18,7 @@ export default class CoreApi extends Client {
         let response: AxiosResponse;
         try {
             const params = new URLSearchParams({ id: id.toString() });
-            response = await this.coreApiHttpClient(`${this.api}/get-by-id/?${params}`);
+            response = await this.coreApiHttpClient.get(`${this.api}/get-by-id/?${params}`);
 
         } catch (error) {
             console.error(error);
@@ -72,7 +72,7 @@ export default class CoreApi extends Client {
         let response: AxiosResponse;
         try {
             const params = new URLSearchParams({ name, limit: limit.toString() });
-            response = await this.coreApiHttpClient(`${this.api}/search-pattern?${params}`);
+            response = await this.coreApiHttpClient.get(`${this.api}/search-pattern?${params}`);
         } catch(error) {
             if (axios.isAxiosError(error)) {
                 console.error(error);
@@ -82,6 +82,26 @@ export default class CoreApi extends Client {
 
         }
         return response;
+    }
+
+    /**
+     * Post-Метод добавления кота(котов) по минимальному описанию [add]{@link https://meowle.fintech-qa.ru/api/core/api-docs-ui/#/%D0%94%D0%BE%D0%B1%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5/post_cats_add}
+     * @param cats минимальное описание кота (котов)
+     * @param cats.name - имя
+     * @param cats.description - описание
+     * @param cats.gender - пол
+     */
+    static async addCats(cats: CatMinInfo): Promise<AxiosResponse<CatsLIst | FailAddCat>> {
+        let response: AxiosResponse;
+
+        try {
+            response = await this.coreApiHttpClient.post(`${this.api}/add`, { cats: cats, });
+
+        } catch (error) {
+            console.error(error);
+        }
+        return response;
+
     }
 
 
