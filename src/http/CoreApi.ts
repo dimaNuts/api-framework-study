@@ -95,14 +95,12 @@ export default class CoreApi extends Client {
         let response: AxiosResponse;
 
         try {
-            response = await this.coreApiHttpClient.post(`${this.api}/add`, { cats: cats, });
+            // см. common.d.ts CatMinInfo/ здесь добавлены объект cats и массив [] для добавления кота см. Swagger
+            response = await this.coreApiHttpClient.post(`${this.api}/add`, { cats: [cats] });
 
         } catch (error) {
             console.error(error);
         }
         return response;
-
     }
-
-
 };

@@ -3,6 +3,7 @@ import CoreApi from '../src/http/CoreApi';
 import * as allure from "allure-js-commons";
 import {Severity} from "allure-js-commons";
 
+
 describe('Проверка методов получения данных api', async () => {
     // Id идентификатор теста @allure.id:⟨VALUE⟩
     it('Проверка имени кота по Id @allure.id: 001', async () => {
@@ -37,9 +38,10 @@ describe('Проверка методов получения данных api', 
             await allure.parameter("time", new Date().toString(), {excluded: true});
 
             const response = await CoreApi.getCatById(id);
+            console.info('тест id:001 🚀:', `выполнен запрос GET /get-by-id c параметром id = ${id}`)
 
-            await allure.logStep(`выполнен запрос GET /get-by-id c параметром id = ${id}`);
-            await allure.logStep(`получены данные о коте из ответа по запросу`);
+            await allure.logStep(`Выполнен запрос GET /get-by-id c параметром id = ${id}`);
+            await allure.logStep(`Получены данные о коте из ответа по запросу`);
             await allure.attachment(
                 'cat',
                 JSON.stringify(response.data.cat, null, 2),
@@ -47,7 +49,8 @@ describe('Проверка методов получения данных api', 
             );
 
             assert.equal(response.data.cat.name, name, 'Имена не соответствуют');
-            await allure.logStep(`выполнена проверка на эквивалент имён: из параметров и имени, полученного из запроса`)
+            await allure.logStep(
+                `Выполнена проверка на эквивалент имён: ожидаемого и фактического, полученного из запроса`);
         });
 
     });
@@ -72,15 +75,12 @@ describe('Проверка методов получения данных api', 
             await allure.parameter("gender", gender);
             await allure.parameter("time", new Date().toString(), {excluded: true});
 
-            console.info('тест id:002 🚀:', 'выполняется запрос GET /список котов по группам');
             const response = await CoreApi.getAllByLetter(limit, order, gender);
-            await allure.logStep(`выполнен запрос GET / Get-Метод получения списка котов сгруппированный по группам `);
-            await allure.logStep('получен список котов из запроса');
+            console.info('тест id:002 🚀:', 'Выполнен запрос GET /список котов по группам');
+            await allure.logStep(`Выполнен запрос GET / Get-Метод получения списка котов сгруппированный по группам `);
 
             const data = JSON.stringify(response.data, null, 2);
-            console.info('тест id:002 🚀:',
-                'получен ответ на запрос GET / список котов сгруппированных в алфавитном порядке');
-
+            await allure.logStep('Список котов из запроса, сгруппированных в алфавитном порядке');
             await allure.attachment(
                 'CatsList',
                 data,
@@ -88,18 +88,15 @@ describe('Проверка методов получения данных api', 
             );
 
             await allure.step(
-                'выполнена проверка количества котов в группе из запроса с ожидаемым',
+                'Выполнена проверка количества котов в группе из запроса с ожидаемым',
                 () => {
                     allure.logStep(`Фактическое количество котов в группе из ответа`);
-                    allure.attachment('actual limit', response.data.groups[0]["count_in_group"].toString(), 'text/plain');
+                    allure.attachment('actual_limit', response.data.groups[0]["count_in_group"].toString(), 'text/plain');
                     allure.logStep(`По заданным параметрам запроса количество котов в группе ожидалось limit=${limit}`);
                     assert.equal(response.data.groups[0]["count_in_group"], 5, 'Количество котов в группе не соответствуют');
                 }
             );
-
-
         });
-
     });
 
     it('Найти кота по части начала имени @allure.id: 003', async () => {
@@ -122,10 +119,11 @@ describe('Проверка методов получения данных api', 
             await allure.parameter("time", new Date().toString(), {excluded: true});
 
             const response = await CoreApi.searchCatByPartName(name, limit);
-            await allure.logStep(`выполнен запрос GET / Get-Метод получения списка котов части начали имени`);
+            console.info('тест id:003 🚀:', `Выполнен запрос GET / Get-Метод получения списка котов части начали имени`);
+            await allure.logStep(`Выполнен запрос GET / Get-Метод получения списка котов части начали имени`);
 
             const data = JSON.stringify(response.data.cats, null, 2);
-            await allure.logStep('получен список котов из запроса');
+            await allure.logStep('Получен список котов из запроса');
             await allure.attachment(
                 'cats',
                 data,
@@ -139,6 +137,7 @@ describe('Проверка методов получения данных api', 
                     // имя кота из списка, полученного из запроса
                     const catName: string = response.data.cats[i].name;
                     await allure.step(`Кот по имени ${catName}`, () =>{
+                        // проверяем имя кота(сделан срез по длине начало имени)
                         assert.equal(catName.slice(0,lenName), name);
                     })
                 }
@@ -146,5 +145,70 @@ describe('Проверка методов получения данных api', 
         })
     });
 
+    it(`Добавление кота(котов) @allure.id: 004`, async () => {
+        await allure.description(`Этот тест проверяет данные добавленного кота`);
+        await allure.owner('Кот Матроскин');
+        await allure.tag("addCats");
+        await allure.severity(Severity.BLOCKER);
+        await allure.label("feature", "");
+        await allure.link(
+            'https://meowle.fintech-qa.ru/api/core/api-docs-ui/#/%D0%94%D0%BE%D0%B1%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5/post_cats_add',
+            "Swagger UI");
+        await allure.link('http://meowle.fintech-qa.ru', 'Meowle');
 
+        // данные нового(одидаемого) кота
+        const expectancyCat = {
+            name: "Кот Матроскин",
+            description: "Кот Матроскин отличается умом и сообразительностью",
+            gender: "male",
+        };
+        await allure.parameter('name', expectancyCat.name);
+        await allure.parameter('description', expectancyCat.description);
+        await allure.parameter('gender', expectancyCat.gender);
+
+
+        await allure.step("Load data from remote server", async () => {
+            const response = await CoreApi.addCats(expectancyCat);
+            await allure.parameter("time", new Date().toString(), {excluded: true});
+
+            // проверяем, что код добавлен
+            await allure.step(`Проверяем, что кот "${expectancyCat.name}" добавлен`, () => {
+                const status: number = 200;
+                allure.logStep(`Актуальный статус код ${response.status}, ожидался ${status}`);
+                assert.ok(
+                    response.status === status,
+                    `Актуальный статус код ${response.status}, ожидался ${status}`
+                );
+            });
+            console.info('тест id:004 🚀:', 'Получен ответ на запрос POST / новый кот');
+
+            await allure.logStep(`Результат добавления списка котов`);
+            const data = JSON.stringify(response.data.cats, null, 2);
+            await allure.attachment(
+                'Cats',
+                data,
+                'application/json'
+            );
+            // Фактические поля  name/description/gender кота из запроса
+            const actualFieldByCat = {
+                name: response.data.cats[0].name.toLowerCase(),
+                description: response.data.cats[0].description.toLowerCase(),
+                gender: response.data.cats[0].gender.toLowerCase(),
+            };
+            // переводим к нижнему регистру, так как при добавлении кота регистр меняется
+            let expectancyCatToLowerCase =  {};
+            for (let key in expectancyCat) {
+                expectancyCatToLowerCase[key] = expectancyCat[key].toLowerCase();
+            }
+            await allure.logStep(`Значения полей ожидаемого и добавленного кота`);
+            const actualCat = JSON.stringify(actualFieldByCat, null, 2);
+            await allure.attachment(`expectancy_Cat`,
+                JSON.stringify(expectancyCat, null, 2), 'application/json');
+            await allure.attachment(`actual_Cat`,
+                actualCat,'application/json');
+            await allure.logStep(`Результат сравнения добавленного кота и ожидаемого,
+             переводим к нижнему регистру, так как при добавлении кота регистр меняется `);
+            assert.deepEqual(actualFieldByCat, expectancyCatToLowerCase);
+        });
+    });
 })

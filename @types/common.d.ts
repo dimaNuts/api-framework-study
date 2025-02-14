@@ -4,11 +4,13 @@
  * @property description - описание
  * @property gender - пол
  */
+// Здесь представлен объект, тк массив и объект cats(напр. при добавлении нового кота) будут добавлены в метод addCats
 export type CatMinInfo  = {
     name: string;
     description: string;
-    gender: 'male' | 'female' | 'unisex';
+    gender: string;
 };
+
 
 
 /**
@@ -27,7 +29,7 @@ export type Cat  = {
     name: string;
     description: string;
     tags: string;
-    gender: 'male' | 'female' | 'unisex';
+    gender: string;
     likes: number;
     dislikes: number;
     // ? означает, что поле не обязательное
