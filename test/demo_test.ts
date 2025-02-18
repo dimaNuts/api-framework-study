@@ -172,13 +172,17 @@ describe('Проверка методов получения данных api', 
             await allure.parameter("time", new Date().toString(), {excluded: true});
 
             // проверяем, что код добавлен
-            await allure.step(`Проверяем, что кот "${expectancyCat.name}" добавлен`, () => {
+            await allure.step(`Проверяем, что кот "${expectancyCat.name}" добавлен, статус ответа "200"
+            и нет сообщения "Такое имя уже есть!"`, () => {
                 const status: number = 200;
                 allure.logStep(`Актуальный статус код ${response.status}, ожидался ${status}`);
                 assert.ok(
                     response.status === status,
                     `Актуальный статус код ${response.status}, ожидался ${status}`
                 );
+                const errDes = response.data.cats[0].errorDescription;
+                assert.isUndefined(errDes, "Такое имя уже есть!");
+                allure.logStep(`Значения поля errorDescription : ${errDes}`);
             });
             console.info('тест id:004 🚀:', 'Получен ответ на запрос POST / новый кот');
 
