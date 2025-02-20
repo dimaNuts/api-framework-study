@@ -3,11 +3,12 @@ import CoreApi from '../src/http/CoreApi';
 import * as allure from "allure-js-commons";
 import {Severity} from "allure-js-commons";
 
-
+// со временем тесты могут не проходить, так как некоторые тесты содержат подставные данные
+// тест @allure.id: 005 завязан на тест @allure.id: 004, чтобы удалить добавленного кота
 describe('Проверка методов получения данных api', async () => {
     // Id идентификатор теста @allure.id:⟨VALUE⟩
     it('Проверка имени кота по Id @allure.id: 001', async () => {
-        /*
+        /**
         * Metadata метаданные { @link https://allurereport.org/docs/mocha-reference/#metadata }
          */
         // Description описание теста
@@ -146,7 +147,7 @@ describe('Проверка методов получения данных api', 
     });
 
     it(`Добавление кота(котов) @allure.id: 004`, async () => {
-        await allure.description(`Этот тест проверяет данные добавленного кота`);
+        await allure.description(`Этот тест проверяет минимальные данные добавленного кота(name, description, gender) `);
         await allure.owner('Кот Матроскин');
         await allure.tag("addCats");
         await allure.severity(Severity.BLOCKER);
@@ -217,10 +218,27 @@ describe('Проверка методов получения данных api', 
     });
 
     it(`Удаление существующего кота по id @allure.id: 005`, async () => {
-        const id = 130387;
-        const response = await CoreApi.removeCat(id);
-        const data = JSON.stringify(response.data, null, 2);
-        await allure.attachment('Удаленный кот', data, 'application/json');
+        await allure.description(`Этот тест проверяет удаление существуюшего кота по его id`);
+        await allure.owner('Кот Матроскин');
+        await allure.severity(Severity.CRITICAL);
+        await allure.link('http://meowle.fintech-qa.ru', 'Meowle');
+        await allure.link(
+            'https://meowle.fintech-qa.ru/api/core/api-docs-ui/#/%D0%A3%D0%B4%D0%B0%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5/delete_cats__catId__remove',
+            'Swagger UI');
 
+        await allure.step(`Получаем id из запроса по части имени кота "кот матроскин"/ удаляем кота`, async () => {
+            await allure.parameter('time', new Date().toString(), {excluded: true});
+            const catsList = await CoreApi.searchCatByPartName('кот матроскин');
+            const id = catsList.data.cats[0].id;
+            await allure.logStep(`Получен id = ${id} кота "кот матроскин"`);
+
+            const response = await CoreApi.removeCat(id);
+            console.info('тест id:005 🚀:', 'Получен ответ на запрос DELETE / кот удален');
+            await allure.logStep(`Получен ответ на запрос DELETE / кот под id=${id} удален`);
+
+            const data = JSON.stringify(response.data, null, 2);
+            await allure.attachment('Удаленный кот', data, 'application/json');
+
+        });
     });
 })
