@@ -103,4 +103,22 @@ export default class CoreApi extends Client {
         }
         return response;
     }
+
+    /**
+     * Delete- Метод удаления кота по id [delete] {@link https://meowle.fintech-qa.ru/api/core/api-docs-ui/#/%D0%A3%D0%B4%D0%B0%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5/delete_cats__catId__remove}
+     * @param id
+     */
+    static async removeCat(id: number): Promise<AxiosResponse<Cat>> {
+        let response: AxiosResponse;
+        try {
+            response = await this.coreApiHttpClient.delete(`${this.api}/${id}/remove`);
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                return error.response;
+            } else {
+                console.error(error);
+            }
+        }
+        return response;
+    }
 };

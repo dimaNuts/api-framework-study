@@ -215,4 +215,12 @@ describe('Проверка методов получения данных api', 
             assert.deepEqual(actualFieldByCat, expectancyCatToLowerCase);
         });
     });
+
+    it(`Удаление существующего кота по id @allure.id: 005`, async () => {
+        const id = 130387;
+        const response = await CoreApi.removeCat(id);
+        const data = JSON.stringify(response.data, null, 2);
+        await allure.attachment('Удаленный кот', data, 'application/json');
+
+    });
 })
